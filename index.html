@@ -32,6 +32,26 @@
     .card{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:18px;margin:12px 0}.card-label{font-size:12px;font-weight:800;color:var(--yellow);margin-bottom:10px}.code-box{background:#071322;border:1px solid #263959;padding:16px;border-radius:14px;direction:ltr;text-align:left;font:13px/1.85 ui-monospace,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word;color:#bfe0ff;overflow-x:auto}.answer{color:var(--green)}.lesson-nav{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.lesson-nav button{flex:1;min-width:140px}.back{border:0;background:none;color:var(--blue);font-weight:800;padding:8px 0 18px;display:inline-flex;align-items:center;gap:7px}
     .progress-track{height:9px;border-radius:100px;background:#203658;overflow:hidden;margin:11px 0}.progress-fill{height:100%;background:linear-gradient(90deg,#78abff,#f4d16b);border-radius:100px;transition:width .2s}
     .editor-shell{background:#091727;border:1px solid #365174;border-radius:18px;overflow:hidden}.editor-header{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;background:#142a47;border-bottom:1px solid #263d59;font:12px ui-monospace,monospace;color:#abc5e8}.dots{display:flex;gap:5px}.dots i{width:9px;height:9px;border-radius:100%;background:#fa787f}.dots i:nth-child(2){background:#f8c75d}.dots i:nth-child(3){background:#6cda9b}textarea.code-editor{width:100%;min-height:235px;resize:vertical;background:#091727;color:#d0eaff;border:0;outline:none;padding:17px;font:14px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace;direction:ltr;text-align:left;tab-size:4;white-space:pre;display:block;border-radius:0}.editor-tools{display:flex;gap:8px;flex-wrap:wrap;margin:13px 0}.editor-tools button{flex:1}.input-label{display:block;font-weight:750;font-size:13px;margin:16px 0 8px}.stdin{width:100%;background:#0a1b31;border:1px solid #355075;color:white;padding:13px;border-radius:13px;direction:ltr;text-align:left;min-height:52px;font-family:ui-monospace,monospace}.terminal{background:#030c15;border:1px solid #315070;padding:16px;border-radius:16px;margin-top:13px;min-height:120px;direction:ltr;text-align:left;white-space:pre-wrap;word-break:break-word;font:13px/1.7 ui-monospace,Menlo,Consolas,monospace;color:#92ebb5}.terminal.error{color:#ff9696}.terminal-title{display:flex;align-items:center;justify-content:space-between;color:var(--muted);font-size:13px;margin:19px 0 6px}.status{font-size:12px;color:var(--muted)}
+
+    /* Accurate translucent error markings behind the editable code (iPhone-safe textarea). */
+    .editor-code-wrap{position:relative;background:#091727;isolation:isolate}
+    .editor-code-wrap textarea.code-editor{position:relative;z-index:2;background:transparent;color:#d0eaff;caret-color:#ffd469;font-size:16px;line-height:1.7;min-height:240px;overflow:auto;white-space:pre;overflow-wrap:normal;padding:17px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .editor-mirror{position:absolute;inset:0;z-index:1;overflow:hidden;margin:0;padding:17px;pointer-events:none;white-space:pre;word-break:normal;overflow-wrap:normal;direction:ltr;text-align:left;color:transparent;font-size:16px;line-height:1.7;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;tab-size:4;border:0;letter-spacing:normal}
+    .editor-mirror mark{background:rgba(255,76,93,.3);color:transparent;border-bottom:2px solid #ff747e;border-radius:3px;padding:0;}
+    .editor-mirror .error-insert{display:inline-block;vertical-align:baseline;height:1.15em;width:3px;border-radius:2px;background:#ff727d;}
+    .checker-row{display:flex;gap:9px;align-items:center;justify-content:space-between;margin:13px 0 8px;flex-wrap:wrap}
+    .checker-status{color:#a9bfdc;font-size:12px;line-height:1.7;flex:1;min-width:145px}
+    .checker-status.issue{color:#ffb5bb}
+    .check-code-btn{font-size:12px;min-height:37px;padding:7px 12px}
+    .fix-panel{background:#281c34;border:1px solid #7c4c63;border-radius:14px;padding:13px 15px;margin:8px 0 13px;font-size:13px;line-height:1.65}
+    .fix-panel[hidden]{display:none}
+    .fix-label{color:#ffc4ce;font-weight:800;margin-bottom:5px}
+    .fix-compare{display:flex;align-items:center;gap:8px;flex-wrap:wrap;direction:ltr;margin:10px 0}
+    .fix-compare code{background:#121e36;border:1px solid #3b4c66;border-radius:7px;padding:5px 7px;white-space:pre-wrap;overflow-wrap:anywhere;font:13px ui-monospace,monospace}
+    .fix-compare .wrong-token{color:#ffb0b8;text-decoration:line-through}
+    .fix-compare .right-token{color:#8bffcb}
+    .apply-fix{background:#244a45;border:1px solid #438877;color:#aaffd5;border-radius:11px;min-height:40px;padding:9px 13px;font-weight:850;font-size:12px;width:100%}
+    .fix-note{font-size:12px;color:#b7c5dc;margin-top:6px}
     .quiz-choice{width:100%;display:flex;text-align:start;gap:11px;align-items:center;border-radius:14px;padding:14px 13px;background:var(--panel);border:1px solid var(--border);color:var(--text);margin:9px 0}.quiz-choice b{background:#254569;border-radius:9px;width:29px;height:29px;display:grid;place-items:center;color:var(--yellow);flex:none}.quiz-choice.selected{border-color:var(--yellow);background:#2e3b3c}.quiz-choice.correct{border-color:var(--green)}.quiz-choice.wrong{border-color:#ef717e}.feedback{margin-top:15px;border-radius:13px;padding:13px;background:#183554;color:#dcf0ff;font-size:13px;line-height:1.8}.quiz-top{display:flex;justify-content:space-between;gap:10px;align-items:center;color:var(--muted);font-size:13px;margin-bottom:18px}
     .bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,680px);padding:9px 12px calc(10px + env(safe-area-inset-bottom));background:#0a1930f2;border-top:1px solid #2d4366;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:grid;grid-template-columns:repeat(5,1fr);gap:4px;z-index:30}.nav-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:8px 1px;border:0;background:none;color:#90a3c1;font-size:10px;font-weight:750;border-radius:12px;min-width:0}.nav-btn svg{width:21px;height:21px}.nav-btn.active{background:#17385d;color:var(--yellow)}
     .pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}.pill{border-radius:100px;padding:7px 11px;font-size:11px;font-weight:750;background:#253d60;color:#c5e0ff}.pill.green{background:#16463e;color:#8bf5c6}.alert{padding:13px;border-radius:14px;background:#192c49;color:#cbd9ef;font-size:13px;line-height:1.8;border:1px solid #334969;margin:13px 0}.hidden{display:none!important}hr{border:none;border-top:1px solid var(--border);margin:19px 0}.float-line{display:flex;align-items:center;justify-content:space-between;gap:10px}.inline-emoji{font-size:23px}.footnote{color:var(--muted);font-size:11px;text-align:center;margin:18px 0}
@@ -136,27 +156,215 @@
     $('#back-lessons').onclick=()=>{openedLesson=null;renderLessons();};$('#copy-sample').onclick=()=>{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(l.code).then(()=>{$('#copy-sample').textContent=t('copied');}).catch(()=>{});};$('#try-sample').onclick=()=>{state.editor=l.code;state.stdin=l.input||'';persist();setScreen('lab');};$('#complete-lesson').onclick=()=>{if(!state.done.includes(i))state.done.push(i);persist();render();};if(i<lessons.length-1)$('#next-lesson').onclick=()=>openLesson(i+1);
   }
   function renderLab(){
-    $('#lab').innerHTML=`<div class="eyebrow">PYTHON PLAYGROUND</div><h1 style="margin:10px 0">${t('labTitle')}</h1><p class="muted">${t('labDesc')}</p><div class="editor-shell"><div class="editor-header"><div class="dots"><i></i><i></i><i></i></div><span>● ${t('file')}</span><span>Python 3</span></div><textarea id="code-editor" class="code-editor" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Python code" placeholder="${t('codeHint')}"></textarea></div><label for="stdin-field" class="input-label">${t('inputLabel')}</label><textarea id="stdin-field" class="stdin" rows="2" spellcheck="false" placeholder="${t('inputHint')}"></textarea><div class="editor-tools"><button class="primary" id="run-code">${ico('play',18)}${t('run')}</button><button class="ghost" id="example-code">${ico('refresh',17)}${t('sample')}</button><button class="ghost" id="clear-output">${ico('code',17)}${t('clear')}</button></div><div class="terminal-title"><strong>${t('output')}</strong><span id="runner-status" class="status">${t('ready')}</span></div><pre class="terminal${lastError?' error':''}" id="terminal-output"></pre><div class="alert">${t('safety')}</div>`;
+    $('#lab').innerHTML=`<div class="eyebrow">PYTHON PLAYGROUND</div><h1 style="margin:10px 0">${t('labTitle')}</h1><p class="muted">${t('labDesc')}</p><div class="editor-shell"><div class="editor-header"><div class="dots"><i></i><i></i><i></i></div><span>● ${t('file')}</span><span>Python 3</span></div><div class="editor-code-wrap"><pre id="code-highlight" class="editor-mirror" aria-hidden="true"></pre><textarea id="code-editor" class="code-editor" wrap="off" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Python code" placeholder="${t('codeHint')}"></textarea></div></div><div class="checker-row"><span class="checker-status" id="checker-status"></span><button type="button" class="ghost check-code-btn" id="check-code">${state.lang==='ar'?'فحص الأخطاء':'Check syntax'}</button></div><div id="fix-panel" class="fix-panel" aria-live="polite" hidden></div><label for="stdin-field" class="input-label">${t('inputLabel')}</label><textarea id="stdin-field" class="stdin" rows="2" spellcheck="false" placeholder="${t('inputHint')}"></textarea><div class="editor-tools"><button class="primary" id="run-code">${ico('play',18)}${t('run')}</button><button class="ghost" id="example-code">${ico('refresh',17)}${t('sample')}</button><button class="ghost" id="clear-output">${ico('code',17)}${t('clear')}</button></div><div class="terminal-title"><strong>${t('output')}</strong><span id="runner-status" class="status">${t('ready')}</span></div><pre class="terminal${lastError?' error':''}" id="terminal-output"></pre><div class="alert">${t('safety')}</div>`;
     $('#code-editor').value=state.editor;$('#stdin-field').value=state.stdin;$('#terminal-output').textContent=lastOutput||t('idle');
-    $('#code-editor').addEventListener('input',e=>{state.editor=e.target.value;persist();});$('#stdin-field').addEventListener('input',e=>{state.stdin=e.target.value;persist();});
-    $('#run-code').onclick=runCode;$('#example-code').onclick=()=>{state.editor=lessons[0].code;state.stdin='';persist();$('#code-editor').value=state.editor;$('#stdin-field').value='';};$('#clear-output').onclick=()=>{lastOutput='';lastError=false;updateConsole();};
+    $('#code-editor').addEventListener('input',e=>{state.editor=e.target.value;persist();validatedIssue=null;validatedSource='';scheduleCheck();});$('#code-editor').addEventListener('scroll',syncEditorScroll,{passive:true});$('#stdin-field').addEventListener('input',e=>{state.stdin=e.target.value;persist();});$('#check-code').onclick=()=>checkPythonSyntax();scheduleCheck(true);
+    $('#run-code').onclick=runCode;$('#example-code').onclick=()=>{state.editor=lessons[0].code;state.stdin='';persist();$('#code-editor').value=state.editor;$('#stdin-field').value='';validatedIssue=null;validatedSource='';scheduleCheck(true);};$('#clear-output').onclick=()=>{lastOutput='';lastError=false;updateConsole();};
     if(awaiting){$('#run-code').disabled=true;$('#runner-status').textContent=t('running');}
   }
   function updateConsole(status){let consoleEl=$('#terminal-output');if(consoleEl){consoleEl.textContent=lastOutput||t('idle');consoleEl.classList.toggle('error',lastError);}if(status&&$('#runner-status'))$('#runner-status').textContent=status;const btn=$('#run-code');if(btn){btn.disabled=awaiting;btn.innerHTML=ico('play',18)+(awaiting?t('running'):t('run'));}}
+  // Code diagnostics: lightweight, on-device suggestions while typing, plus Python ast.parse on demand.
+  let activeFix = null, validatedIssue = null, validatedSource = '', checkerTimer = null;
+  const correctionNames = ['print','input','range','len','int','str','float','list','dict','tuple','set','sum','sorted','enumerate','abs','round','type','open','super'];
+  const correctionMethods = ['append','extend','insert','remove','pop','lower','upper','split','strip','replace','read','readline','readlines','write','get','items','keys','values'];
+  const keywordTypos = {retrun:'return', retun:'return', els:'else', esle:'else', elfi:'elif', iff:'if', wihle:'while', whlie:'while', fro:'for', improt:'import', impot:'import', clss:'class', calss:'class', defini:'def'};
+  const lineKeywords = new Set(['if','elif','else','for','while','def','class','try','except','finally','with','match','case']);
+  const checkerText = (ar,en) => state.lang==='ar'?ar:en;
+  function tokenDistance(a,b){
+    // Damerau-Levenshtein: handles a missing letter and adjacent transpositions such as pirnt.
+    const d=Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));
+    for(let i=0;i<=a.length;i++)d[i][0]=i;
+    for(let j=0;j<=b.length;j++)d[0][j]=j;
+    for(let i=1;i<=a.length;i++)for(let j=1;j<=b.length;j++){
+      const cost=a[i-1]===b[j-1]?0:1;
+      d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+cost);
+      if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])d[i][j]=Math.min(d[i][j],d[i-2][j-2]+1);
+    }
+    return d[a.length][b.length];
+  }
+  function nearestToken(word, candidates){
+    let best=null,bestDist=99,ambiguous=false;
+    if(word.length<3||candidates.includes(word))return null;
+    for(const choice of candidates){
+      const distance=tokenDistance(word,choice);
+      if(distance<bestDist){best=choice;bestDist=distance;ambiguous=false;}
+      else if(distance===bestDist)ambiguous=true;
+    }
+    // A conservative limit avoids changing legitimate user-defined variable names.
+    return bestDist===1&&!ambiguous?best:null;
+  }
+  function codeWithoutStrings(line){
+    // Keep positions identical while skipping string literals and # comments.
+    let out='',quote=null,triple=false;
+    for(let i=0;i<line.length;i++){
+      const ch=line[i];
+      if(quote){
+        if(ch==='\\'&&i+1<line.length){out+='  ';i++;continue;}
+        if(triple&&line.slice(i,i+3)===quote.repeat(3)){out+='   ';i+=2;quote=null;triple=false;continue;}
+        if(!triple&&ch===quote){out+=' ';quote=null;continue;}
+        out+=' ';continue;
+      }
+      if(ch==='#'){out+=' '.repeat(line.length-i);break;}
+      if(ch==='"'||ch==="'"){
+        quote=ch;triple=line.slice(i,i+3)===ch.repeat(3);out+=triple?'   ':' ';
+        if(triple)i+=2;continue;
+      }
+      out+=ch;
+    }
+    return out;
+  }
+  function createFix(start,end,replacement,whyAr,whyEn){
+    return {start,end,replacement,whyAr,whyEn};
+  }
+  function localIssue(code){
+    let offset=0;
+    const lines=code.split('\n');
+    for(const line of lines){
+      const bare=codeWithoutStrings(line);
+      let hit;
+      const functions=/\b([a-zA-Z_]\w*)\b(?=\s*\()/g;
+      while((hit=functions.exec(bare))){
+        const word=hit[1],pos=hit.index;
+        const afterDot=bare.slice(0,pos).trimEnd().endsWith('.');
+        if(afterDot){
+          const nearest=nearestToken(word,correctionMethods);
+          if(nearest)return createFix(offset+pos,offset+pos+word.length,nearest,'اسم دالة النص أو القائمة فيه خطأ إملائي.','This method name looks misspelled.');
+        }else{
+          const prefix=bare.slice(0,pos);
+          if(/\b(def|class)\s+$/.test(prefix))continue;
+          const nearest=nearestToken(word,correctionNames);
+          if(nearest)return createFix(offset+pos,offset+pos+word.length,nearest,'قد يكون اسم الدالة مكتوبًا بشكل غير صحيح.','The function name may have a typo.');
+        }
+      }
+      hit=/^(\s*)([a-zA-Z_]+)(?=\s|:|$)/.exec(bare);
+      if(hit&&keywordTypos[hit[2]]){
+        const start=offset+hit[1].length;
+        return createFix(start,start+hit[2].length,keywordTypos[hit[2]],'الكلمة المحجوزة غير مكتوبة بشكل صحيح.','This Python keyword appears misspelled.');
+      }
+      hit=/^(\s*)(if|elif|else|for|while|def|class|try|except|finally|with|match|case)\b(.*)$/.exec(bare);
+      if(hit&&lineKeywords.has(hit[2])&&!bare.includes(':')&&!/[\\([{]\s*$/.test(bare)&&bare.trim().length>hit[2].length){
+        const end=bare.trimEnd().length;
+        const insert=offset+end;
+        return createFix(insert,insert,':','نسيت النقطتين : في نهاية تعريف الشرط أو الكتلة.','This Python block needs a trailing colon (:).');
+      }
+      offset+=line.length+1;
+    }
+    return null;
+  }
+  function syntaxFix(issue,code){
+    if(!issue||!issue.line)return null;
+    const lines=code.split('\n');
+    const idx=Math.max(0,Math.min(lines.length-1,issue.line-1));
+    const startOfLine=lines.slice(0,idx).reduce((a,line)=>a+line.length+1,0);
+    const line=lines[idx];
+    const col=Math.max(0,Math.min(line.length,(issue.column||1)-1));
+    const message=String(issue.message||'');
+    if(/expected ':'/.test(message)){
+      const end=codeWithoutStrings(line).trimEnd().length;
+      return createFix(startOfLine+end,startOfLine+end,':','تحتاج إضافة النقطتين : هنا.','Insert a colon (:) here.');
+    }
+    // Errors without a trustworthy replacement are highlighted, but never auto-corrected.
+    const start=startOfLine+col;
+    const end=Math.max(start+1,Math.min(code.length,startOfLine+Math.max(col+1,(issue.endColumn||issue.column||1)-1)));
+    return {start,end,replacement:null,whyAr:'بايثون حدّد موضع خطأ نحوي. راجع الصياغة قبل التصحيح.',whyEn:'Python located a syntax error. Review the code before editing.',detail:message};
+  }
+  function syncEditorScroll(){
+    const editor=$('#code-editor'),mirror=$('#code-highlight');
+    if(editor&&mirror){mirror.scrollTop=editor.scrollTop;mirror.scrollLeft=editor.scrollLeft;}
+  }
+  function paintEditor(){
+    const editor=$('#code-editor'),mirror=$('#code-highlight'),panel=$('#fix-panel'),status=$('#checker-status');
+    if(!editor||!mirror||!panel||!status)return;
+    const code=editor.value;
+    const current=validatedIssue&&validatedSource===code?syntaxFix(validatedIssue,code):null;
+    const suggestion=localIssue(code)||current;
+    activeFix=suggestion;
+    if(suggestion){
+      const start=Math.min(code.length,Math.max(0,suggestion.start)),end=Math.min(code.length,Math.max(start,suggestion.end));
+      const highlight=start===end?'<span class="error-insert"></span>':`<mark>${esc(code.slice(start,end))}</mark>`;
+      mirror.innerHTML=esc(code.slice(0,start))+highlight+esc(code.slice(end))+'\n';
+      status.textContent=checkerText('وجدنا موضعًا يحتاج مراجعة','A possible issue was found');status.classList.add('issue');
+      const fragment=code.slice(start,end)||checkerText('رمز ناقص','Missing symbol');
+      const explanation=checkerText(suggestion.whyAr,suggestion.whyEn);
+      panel.innerHTML=`<div class="fix-label">${checkerText('🔴 موضع الخطأ المحتمل','🔴 Possible issue')}</div><div>${esc(explanation)}</div>`+
+        (suggestion.replacement!==null?`<div class="fix-compare"><code class="wrong-token">${esc(fragment)}</code><span>→</span><code class="right-token">${esc(suggestion.replacement)}</code></div><button type="button" class="apply-fix" id="apply-fix">${checkerText('✓ صحّح هذا الجزء فقط','✓ Replace only this part')}</button>`:
+          `<div class="fix-note">${esc(suggestion.detail||'SyntaxError')}</div>`)+
+        `<div class="fix-note">${checkerText('اقتراح تعليمي؛ راجعه قبل تطبيقه.','Educational suggestion; please review it before applying.')}</div>`;
+      panel.hidden=false;
+      const apply=$('#apply-fix');if(apply)apply.onclick=()=>{
+        const editor=$('#code-editor');if(!editor||!activeFix||activeFix.replacement===null)return;
+        const selected=activeFix;
+        editor.setRangeText(selected.replacement,selected.start,selected.end,'end');
+        state.editor=editor.value;validatedIssue=null;validatedSource='';persist();
+        scheduleCheck(true);editor.focus();
+      };
+    }else{
+      mirror.textContent=code+'\n';panel.hidden=true;
+      status.classList.remove('issue');
+      status.textContent=checkerText('لا توجد أخطاء واضحة في الفحص السريع','No obvious issues in quick scan');
+    }
+    syncEditorScroll();
+  }
+  function scheduleCheck(immediately=false){
+    if(checkerTimer)clearTimeout(checkerTimer);
+    if(immediately)paintEditor();else checkerTimer=setTimeout(paintEditor,230);
+  }
+  function checkPythonSyntax(){
+    const source=$('#code-editor')?.value||'';
+    if(!source.trim()){lastOutput=t('empty');lastError=true;updateConsole();return;}
+    if(awaiting)return;
+    state.editor=source;persist();
+    sendToWorker('check');
+  }
+
   // Run Python in a same-origin ES module worker (required by Pyodide 314).
   function stopWorker(){if(runTimeout){clearTimeout(runTimeout);runTimeout=null;}if(worker){worker.terminate();worker=null;}}
-  function runCode(){const code=$('#code-editor')?.value||'';if(!code.trim()){lastOutput=t('empty');lastError=true;updateConsole();return;}if(awaiting)return;state.editor=code;state.stdin=$('#stdin-field')?.value||'';persist();awaiting=true;lastError=false;lastOutput='';updateConsole(t('loading'));runTimeout=setTimeout(()=>{stopWorker();awaiting=false;lastError=true;lastOutput=state.lang==='ar'?'انتهت مهلة تحميل بايثون. تحقق من الإنترنت ثم جرّب مرة أخرى.':'Python loading timed out. Check your internet connection and try again.';updateConsole(t('ready'));},120000);
-    try {
-      if(!worker){worker=new Worker('./python-worker.js', {type:'module'});}
+  function runCode(){
+    const code=$('#code-editor')?.value||'';
+    if(!code.trim()){lastOutput=t('empty');lastError=true;updateConsole();return;}
+    if(awaiting)return;
+    state.editor=code;state.stdin=$('#stdin-field')?.value||'';persist();
+    sendToWorker('run');
+  }
+  function sendToWorker(action){
+    awaiting=true;lastError=false;
+    if(action==='run')lastOutput='';
+    updateConsole(t('loading'));
+    const source=state.editor;
+    const checkBtn=$('#check-code');if(checkBtn)checkBtn.disabled=true;
+    runTimeout=setTimeout(()=>{
+      stopWorker();awaiting=false;lastError=true;
+      lastOutput=checkerText('انتهت مهلة تحميل محرك بايثون. افحص الإنترنت ثم أعد المحاولة.','Python engine timed out. Check the connection and retry.');
+      if($('#check-code'))$('#check-code').disabled=false;
+      updateConsole(t('ready'));
+    },120000);
+    try{
+      if(!worker)worker=new Worker('./python-worker.js',{type:'module'});
       worker.onmessage=e=>{
         if(e.data.kind==='loading'){updateConsole(t('loading'));return;}
-        if(e.data.kind==='executing'){if(runTimeout)clearTimeout(runTimeout);runTimeout=setTimeout(()=>{stopWorker();awaiting=false;lastError=true;lastOutput=t('timeout');updateConsole(t('ready'));},15000);updateConsole(t('executing'));return;}
-        if(e.data.kind==='failed'){stopWorker();awaiting=false;lastError=true;lastOutput=t('failed')+'\n'+(e.data.message||'');updateConsole(t('ready'));return;}
-        if(e.data.kind==='result'){if(runTimeout)clearTimeout(runTimeout);runTimeout=null;awaiting=false;lastError=!!e.data.error;lastOutput=e.data.output;updateConsole(t('ready'));}
+        if(e.data.kind==='executing'){
+          if(runTimeout)clearTimeout(runTimeout);
+          runTimeout=setTimeout(()=>{stopWorker();awaiting=false;lastError=true;lastOutput=t('timeout');if($('#check-code'))$('#check-code').disabled=false;updateConsole(t('ready'));},15000);
+          updateConsole(t('executing'));return;
+        }
+        if(e.data.kind==='failed'){
+          stopWorker();awaiting=false;lastError=true;lastOutput=t('failed')+'\n'+(e.data.message||'');
+          if($('#check-code'))$('#check-code').disabled=false;updateConsole(t('ready'));return;
+        }
+        if(e.data.kind==='checked'||e.data.kind==='result'){
+          if(runTimeout)clearTimeout(runTimeout);runTimeout=null;awaiting=false;
+          if($('#check-code'))$('#check-code').disabled=false;
+          if($('#code-editor')?.value===source){validatedSource=source;validatedIssue=e.data.diagnostic||null;scheduleCheck(true);}
+          if(e.data.kind==='checked'){
+            lastError=!!e.data.diagnostic;
+            lastOutput=lastError?(e.data.output||'SyntaxError'):checkerText('✓ فحص بايثون: الكود سليم نحويًا.','✓ Python syntax check passed.');
+          }else{lastError=!!e.data.error;lastOutput=e.data.output;}
+          updateConsole(t('ready'));
+        }
       };
-      worker.onerror=()=>{stopWorker();awaiting=false;lastError=true;lastOutput=t('failed');updateConsole(t('ready'));};
-      worker.postMessage({code:state.editor,stdin:state.stdin});
-    }catch(e){stopWorker();awaiting=false;lastError=true;lastOutput=t('failed')+'\n'+e.message;updateConsole(t('ready'));}
+      worker.onerror=()=>{stopWorker();awaiting=false;lastError=true;lastOutput=t('failed');if($('#check-code'))$('#check-code').disabled=false;updateConsole(t('ready'));};
+      worker.postMessage({action,code:source,stdin:state.stdin});
+    }catch(e){stopWorker();awaiting=false;lastError=true;lastOutput=t('failed')+'\n'+e.message;if($('#check-code'))$('#check-code').disabled=false;updateConsole(t('ready'));}
   }
   function renderQuiz(){if(qi>=questions.length){const best=Math.max(state.best||0,score);state.best=best;persist();$('#quiz').innerHTML=`<div class="eyebrow">${t('quizComplete')}</div><div style="text-align:center;padding:32px 12px"><div style="font-size:70px">🏆</div><h1>${t('yourScore')}</h1><div style="font-size:50px;font-weight:900;color:var(--yellow)">${score} / ${questions.length}</div><p class="muted">${Math.round(score/questions.length*100)}%</p><button class="primary full" id="retry-quiz">${ico('refresh',18)}${t('tryAgain')}</button><button class="ghost full" style="margin-top:10px" id="study-again">${t('review')}</button></div>`;$('#retry-quiz').onclick=()=>{qi=0;score=0;selected=null;checked=false;renderQuiz();};$('#study-again').onclick=()=>setScreen('lessons');return;}
     const q=questions[qi];$('#quiz').innerHTML=`<div class="eyebrow">${t('stage')}</div><h1 style="margin:10px 0">${t('quizTitle')}</h1><p class="muted">${t('quizDesc')}</p><div class="quiz-top"><span>${t('question')} ${qi+1} ${t('of')} ${questions.length}</span><span>✦ ${score} / ${questions.length}</span></div><div class="progress-track"><div class="progress-fill" style="width:${qi/questions.length*100}%"></div></div><div class="card" style="margin-top:21px"><h2 style="line-height:1.6;margin:0">${esc(loc(q.q))}</h2></div><div id="choices">${q.opts[state.lang==='ar'?0:1].map((o,i)=>`<button type="button" class="quiz-choice ${selected===i?'selected':''} ${checked&&i===q.correct?'correct':''} ${checked&&selected===i&&i!==q.correct?'wrong':''}" data-choice="${i}" ${checked?'disabled':''}><b>${'ABCD'[i]}</b><span dir="auto">${esc(o)}</span></button>`).join('')}</div>${checked?`<div class="feedback">${selected===q.correct?'✅ '+t('correct'):'💡 '+t('wrong')}<div>${esc(loc(q.why))}</div></div>`:''}<button class="primary full" style="margin-top:20px" id="quiz-next">${checked?(qi===questions.length-1?t('finish'):t('nextQ')):t('confirm')}</button>`;
