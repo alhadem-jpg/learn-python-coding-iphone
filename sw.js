@@ -1,5 +1,5 @@
-const CACHE = 'learn-python-coding-v2';
-const SHELL = ['./', './index.html', './python-worker.js', './manifest.webmanifest', './app-icon-192.png', './app-icon-512.png'];
+const CACHE = 'learn-python-coding-v3';
+const SHELL = ['./', './index.html', './python-worker.js', './itbs107-data.js', './manifest.webmanifest', './app-icon-192.png', './app-icon-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(SHELL)).then(() => self.skipWaiting()));
 });
