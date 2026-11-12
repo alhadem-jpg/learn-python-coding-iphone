@@ -7,7 +7,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Python Academy" />
-  <meta name="description" content="Learn Python Coding — bilingual lessons, interactive Python editor, and quizzes." />
+  <meta name="description" content="Learn Python Coding — bilingual Python lessons and randomized quizzes." />
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="apple-touch-icon" href="./app-icon-192.png" />
   <link rel="icon" href="./app-icon-192.png" />
@@ -135,6 +135,24 @@
     {q:['ماذا تُرجع input() افتراضيًا؟','What does input() return by default?'],opts:[['عدد صحيح','نص','قائمة','قيمة منطقية'],['integer','string','list','boolean']],correct:1,why:['input() تعيد نصًا حتى لو أدخلت أرقامًا.','input() returns a string, even if it contains digits.']},
     {q:['متى تنفذ تعليمات else؟','When does else execute?'],opts:[['دائمًا','فقط عند تحقق if','إذا كان شرط if غير صحيح','عند كتابة print'],['always','when if is true','when the if condition is false','only with print']],correct:2,why:['مع if / else تنفذ else إذا لم يتحقق الشرط.','With if / else, else runs when the if condition is false.']}
   ];
+  // Fisher–Yates creates independent, unbiased-by-position attempts.
+  const randomIndex = max => {
+    if(max<=1)return 0;
+    if(globalThis.crypto?.getRandomValues){
+      const values=new Uint32Array(1);
+      const range=0x100000000, limit=range-(range%max);
+      do{crypto.getRandomValues(values);}while(values[0]>=limit);
+      return values[0]%max;
+    }
+    return Math.floor(Math.random()*max);
+  };
+  function shuffleCopy(items){
+    const out=Array.from(items);
+    for(let i=out.length-1;i>0;i--){const j=randomIndex(i+1);[out[i],out[j]]=[out[j],out[i]];}
+    return out;
+  }
+  let quizRound=shuffleCopy(questions).map(q=>({q,order:shuffleCopy([0,1,2,3])}));
+  function newQuizRound(){quizRound=shuffleCopy(questions).map(q=>({q,order:shuffleCopy([0,1,2,3])}));}
   const storageKey='learn-python-coding-state-v1';
   let state={lang:'ar',done:[],editor:lessons[0].code,stdin:'',best:null,courseBests:{}};
   try{const raw=JSON.parse(localStorage.getItem(storageKey)||'null');if(raw&&typeof raw==='object'){state={...state,...raw};if(!['ar','en'].includes(state.lang))state.lang='ar';if(!Array.isArray(state.done))state.done=[];}}catch(e){}
@@ -366,9 +384,18 @@
       worker.postMessage({action,code:source,stdin:state.stdin});
     }catch(e){stopWorker();awaiting=false;lastError=true;lastOutput=t('failed')+'\n'+e.message;if($('#check-code'))$('#check-code').disabled=false;updateConsole(t('ready'));}
   }
-  function renderQuiz(){if(qi>=questions.length){const best=Math.max(state.best||0,score);state.best=best;persist();$('#quiz').innerHTML=`<div class="eyebrow">${t('quizComplete')}</div><div style="text-align:center;padding:32px 12px"><div style="font-size:70px">🏆</div><h1>${t('yourScore')}</h1><div style="font-size:50px;font-weight:900;color:var(--yellow)">${score} / ${questions.length}</div><p class="muted">${Math.round(score/questions.length*100)}%</p><button class="primary full" id="retry-quiz">${ico('refresh',18)}${t('tryAgain')}</button><button class="ghost full" style="margin-top:10px" id="study-again">${t('review')}</button></div>`;$('#retry-quiz').onclick=()=>{qi=0;score=0;selected=null;checked=false;renderQuiz();};$('#study-again').onclick=()=>setScreen('lessons');return;}
-    const q=questions[qi];$('#quiz').innerHTML=`<div class="eyebrow">${t('stage')}</div><h1 style="margin:10px 0">${t('quizTitle')}</h1><p class="muted">${t('quizDesc')}</p><div class="quiz-top"><span>${t('question')} ${qi+1} ${t('of')} ${questions.length}</span><span>✦ ${score} / ${questions.length}</span></div><div class="progress-track"><div class="progress-fill" style="width:${qi/questions.length*100}%"></div></div><div class="card" style="margin-top:21px"><h2 style="line-height:1.6;margin:0">${esc(loc(q.q))}</h2></div><div id="choices">${q.opts[state.lang==='ar'?0:1].map((o,i)=>`<button type="button" class="quiz-choice ${selected===i?'selected':''} ${checked&&i===q.correct?'correct':''} ${checked&&selected===i&&i!==q.correct?'wrong':''}" data-choice="${i}" ${checked?'disabled':''}><b>${'ABCD'[i]}</b><span dir="auto">${esc(o)}</span></button>`).join('')}</div>${checked?`<div class="feedback">${selected===q.correct?'✅ '+t('correct'):'💡 '+t('wrong')}<div>${esc(loc(q.why))}</div></div>`:''}<button class="primary full" style="margin-top:20px" id="quiz-next">${checked?(qi===questions.length-1?t('finish'):t('nextQ')):t('confirm')}</button>`;
-    $('#choices').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(checked)return;selected=Number(b.dataset.choice);renderQuiz();});$('#quiz-next').onclick=()=>{if(!checked){if(selected===null){alert(t('choose'));return;}checked=true;if(selected===q.correct)score++;renderQuiz();}else{qi++;selected=null;checked=false;renderQuiz();}};
+  function renderQuiz(){
+    const total=quizRound.length;
+    if(qi>=total){
+      state.best=Math.max(state.best||0,score);persist();
+      $('#quiz').innerHTML=`<div class="eyebrow">${t('quizComplete')}</div><div style="text-align:center;padding:32px 12px"><div style="font-size:70px">🏆</div><h1>${t('yourScore')}</h1><div style="font-size:50px;font-weight:900;color:var(--yellow)">${score} / ${total}</div><p class="muted">${Math.round(score/total*100)}%</p><button class="primary full" id="retry-quiz">${ico('refresh',18)}${t('tryAgain')}</button><button class="ghost full" style="margin-top:10px" id="study-again">${t('review')}</button></div>`;
+      $('#retry-quiz').onclick=()=>{qi=0;score=0;selected=null;checked=false;newQuizRound();renderQuiz();};
+      $('#study-again').onclick=()=>setScreen('lessons');return;
+    }
+    const entry=quizRound[qi],q=entry.q,order=entry.order,correct=order.indexOf(q.correct);
+    $('#quiz').innerHTML=`<div class="eyebrow">${t('stage')}</div><h1 style="margin:10px 0">${t('quizTitle')}</h1><p class="muted">${t('quizDesc')}</p><div class="quiz-top"><span>${t('question')} ${qi+1} ${t('of')} ${total}</span><span>✦ ${score} / ${total}</span></div><div class="progress-track"><div class="progress-fill" style="width:${qi/total*100}%"></div></div><div class="card" style="margin-top:21px"><h2 style="line-height:1.6;margin:0">${esc(loc(q.q))}</h2></div><div id="choices">${order.map((original,i)=>`<button type="button" class="quiz-choice ${selected===i?'selected':''} ${checked&&i===correct?'correct':''} ${checked&&selected===i&&i!==correct?'wrong':''}" data-choice="${i}" ${checked?'disabled':''}><b>${'ABCD'[i]}</b><span dir="auto">${esc(q.opts[state.lang==='ar'?0:1][original])}</span></button>`).join('')}</div>${checked?`<div class="feedback">${selected===correct?'✅ '+t('correct'):'💡 '+t('wrong')}<div>${esc(loc(q.why))}</div></div>`:''}<button class="primary full" style="margin-top:20px" id="quiz-next">${checked?(qi===total-1?t('finish'):t('nextQ')):t('confirm')}</button>`;
+    $('#choices').querySelectorAll('button').forEach(b=>b.onclick=()=>{if(checked)return;selected=Number(b.dataset.choice);renderQuiz();});
+    $('#quiz-next').onclick=()=>{if(!checked){if(selected===null){alert(t('choose'));return;}checked=true;if(selected===correct)score++;renderQuiz();}else{qi++;selected=null;checked=false;renderQuiz();}};
   }
   function renderProgress(){$('#progress').innerHTML=`<div class="eyebrow">${t('course')}</div><h1 style="margin:10px 0">${t('progressTitle')}</h1><p class="muted">${t('progressDesc')}</p><div class="card" style="text-align:center;padding:31px"><div style="font-size:54px;font-weight:900;color:var(--yellow)">${progressPct()}%</div><div class="muted">${state.done.length} ${t('total')} ${lessons.length} ${t('completed')}</div><div class="progress-track"><div class="progress-fill" style="width:${progressPct()}%"></div></div>${state.done.length===lessons.length?`<div class="pill green">${t('courseDone')}</div>`:''}</div><div class="stats"><div class="stat"><span class="stat-icon">🏅</span><strong>${state.best===null?'—':state.best+' / '+questions.length}</strong><small>${t('best')}</small></div><div class="stat"><span class="stat-icon">📘</span><strong>${state.done.length}</strong><small>${t('completed')}</small></div></div><div class="section-head"><h2>${t('course')}</h2></div><div class="lesson-list">${lessons.map(lessonTile).join('')}</div><div class="alert">${t('storage')}</div><button class="ghost full" id="reset-progress">${t('resetAll')}</button>`;attachLessonButtons($('#progress'));$('#reset-progress').onclick=()=>{if(confirm(t('confirmReset'))){state.done=[];state.best=null;persist();render();}};}
   // ITBS107: extra learning track based on the user's study compilations.
@@ -376,6 +403,28 @@
   const syllabus = window.ITBS107;
   let courseMode = 'overview', selectedUnit = 'unit1', selectedSet = 'unit1';
   let courseIndex = 0, courseScore = 0, coursePicked = null, courseAnswered = false;
+  const RANDOM_SET_ID='random-mix';
+  const randomSetName=['اختبار شامل عشوائي — 15 سؤالًا','Random Mixed Quiz — 15 Questions'];
+  let courseRound=[];
+  function startCourseRound(id){
+    selectedSet=id;
+    let entries;
+    if(id===RANDOM_SET_ID){
+      // Hospital-project questions are excluded: their source code was not supplied.
+      const eligible=Object.entries(syllabus.sets).filter(([key])=>key!=='activity2');
+      const pool=eligible.flatMap(([key,set])=>set.q.map(q=>({q,kind:set.kind,source:key})));
+      entries=shuffleCopy(pool).slice(0,15);
+    }else{
+      const set=syllabus.sets[id];
+      entries=shuffleCopy(set.q.map(q=>({q,kind:set.kind,source:id})));
+    }
+    courseRound=entries.map(entry=>{
+      const order=entry.kind==='mc'?shuffleCopy(entry.q.options.map((_,i)=>i)):null;
+      return {...entry,order,correct:entry.kind==='tf'?(entry.q.answer?0:1):order.indexOf(entry.q.answer)};
+    });
+    courseMode='quiz';courseIndex=0;courseScore=0;coursePicked=null;courseAnswered=false;
+  }
+
   const cLoc = pair => pair[state.lang === 'ar' ? 0 : 1];
   const cText = (ar,en) => state.lang === 'ar' ? ar : en;
   const goCourse = () => {courseMode='overview';setScreen('itbs');};
@@ -390,10 +439,11 @@
     if(courseMode==='overview'){
       const finished=Object.keys(bests).filter(k=>Number.isFinite(bests[k])).length;
       target.innerHTML=`<div class="eyebrow">DIPLOMA · CYBERSECURITY · ITBS107</div><h1 style="margin:10px 0">${cText('منهج البرمجة المتقدمة','Advanced Programming Course')}</h1><p class="muted">${cText('شرح عملي باللغتين، واختبارات من التجميعات التي أرسلتها.','Bilingual practical lessons and quizzes from your uploaded materials.')}</p>
-        <div class="course-statline"><div><strong>6</strong><span>${cText('وحدات','Units')}</span></div><div><strong>120</strong><span>${cText('سؤال مراجعة','Review questions')}</span></div><div><strong>${finished}/11</strong><span>${cText('اختبارات أُنجزت','Tests completed')}</span></div></div>${summary}
+        <div class="course-statline"><div><strong>6</strong><span>${cText('وحدات','Units')}</span></div><div><strong>120</strong><span>${cText('سؤال مراجعة','Review questions')}</span></div><div><strong>${finished}/12</strong><span>${cText('اختبارات أُنجزت','Tests completed')}</span></div></div>${summary}
         <div class="section-head"><h2>${cText('دروس الوحدات','Unit Lessons')}</h2></div>
         <div class="course-grid">${syllabus.units.map((u,i)=>`<button type="button" class="lesson-card" data-cunit="${esc(u.id)}"><span class="lesson-icon">${i+1}</span><span class="lesson-info"><strong>${esc(cLoc(u.title))}</strong><small>${esc(cLoc(u.intro))}</small></span><span class="chevron">›</span></button>`).join('')}</div>
         <div class="section-head"><h2>${cText('اختبارات التجميعات','Question Banks')}</h2></div>
+        <button type="button" class="primary full" data-cquiz="random-mix" style="margin:10px 0 18px">${ico('refresh',18)} ${cText('اختبار شامل عشوائي — 15 سؤالًا','Random Mixed Quiz — 15 Questions')}</button>
         <div class="course-grid">${Object.entries(syllabus.sets).map(([id,set])=>`<button type="button" class="course-test" data-cquiz="${esc(id)}"><span class="course-test-icon">${id==='mid'?'MC':'T/F'}</span><span class="lesson-info"><strong>${esc(cLoc(set.name))}</strong><small>${set.q.length} ${cText('أسئلة','questions')} · ${esc(cLoc(set.subtitle))}</small><span class="lesson-meta">${Number.isFinite(bests[id]) ? cText('أعلى درجة: ','Best score: ')+bests[id]+'/'+set.q.length : cText('لم يتم الاختبار بعد','Not attempted')}</span></span><span class="chevron">›</span></button>`).join('')}</div>`;
     }
     if(courseMode==='unit'){
@@ -404,15 +454,15 @@
         <button class="primary full" type="button" data-cquiz="${esc(unit.id)}" style="margin-top:20px">${ico('quiz',18)} ${cText('اختبر معلوماتك — 10 أسئلة','Take the 10-question unit test')}</button>`;
     }
     if(courseMode==='quiz'){
-      const set=syllabus.sets[selectedSet];
-      if(courseIndex>=set.q.length){
+      const set=selectedSet===RANDOM_SET_ID?{name:randomSetName,q:courseRound}:syllabus.sets[selectedSet];
+      const total=courseRound.length;
+      if(courseIndex>=total){
         const bests=state.courseBests||{};bests[selectedSet]=Math.max(bests[selectedSet]??0,courseScore);state.courseBests=bests;persist();
-        target.innerHTML=`<button class="back" data-cback="1">‹ ${cText('العودة إلى المنهج','Back to course')}</button><div class="course-result"><div style="font-size:68px">🏆</div><div class="eyebrow">${esc(cLoc(set.name))}</div><h1>${cText('انتهى الاختبار!','Quiz Complete!')}</h1><div class="score-big">${courseScore} / ${set.q.length}</div><p class="muted">${Math.round(100*courseScore/set.q.length)}% · ${cText('أفضل درجة محفوظة على هذا الجهاز','Your best score is saved on this device')}</p><button class="primary full" type="button" data-cretry="1">${cText('إعادة الاختبار','Try Again')}</button><button class="ghost full" type="button" data-cback="1" style="margin-top:10px">${cText('كل الوحدات','All units')}</button></div>`;
+        target.innerHTML=`<button class="back" data-cback="1">‹ ${cText('العودة إلى المنهج','Back to course')}</button><div class="course-result"><div style="font-size:68px">🏆</div><div class="eyebrow">${esc(cLoc(set.name))}</div><h1>${cText('انتهى الاختبار!','Quiz Complete!')}</h1><div class="score-big">${courseScore} / ${total}</div><p class="muted">${Math.round(100*courseScore/total)}% · ${cText('أفضل درجة محفوظة على هذا الجهاز','Your best score is saved on this device')}</p><button class="primary full" type="button" data-cretry="1">${cText('إعادة الاختبار','Try Again')}</button><button class="ghost full" type="button" data-cback="1" style="margin-top:10px">${cText('كل الوحدات','All units')}</button></div>`;
       }else{
-        const q=set.q[courseIndex];
-        const kind=set.kind;
-        const choices=kind==='tf'? [cText('صحيح','True'),cText('خطأ','False')]:q.options;
-        const correct=kind==='tf'?(q.answer===true?0:1):q.answer;
+        const entry=courseRound[courseIndex],q=entry.q,kind=entry.kind;
+        const choices=kind==='tf'?[cText('صحيح','True'),cText('خطأ','False')]:entry.order.map(i=>q.options[i]);
+        const correct=entry.correct;
         const sideNote=q.note==='project'?cText('تنبيه: إجابة التجميعة مبنية على كود مشروع المستشفى، وهذا الكود غير موجود ضمن الملفات.','Note: This answer depends on hospital-project code that was not included.'):
             q.note==='environment'?cText('تنبيه: تثبيت NumPy يعتمد على البيئة وإصدار الحزم، لذا راجع حالة بيئتك.','Note: Installing NumPy depends on your environment and dependencies.'):
             q.note==='approx'?cText('تنبيه: الخيار B هو الأقرب بين الخيارات؛ صياغته غير دقيقة، لأن الاستيراد قد يشمل أصنافًا ومتغيرات أيضًا.','Note: B is the nearest option, but the wording is imprecise: wildcard imports may include classes and variables too.'):
@@ -420,11 +470,11 @@
             q.note==='ambiguous'?cText('تنبيه: توجد فروق بين list وarray.array؛ مفتاح الملخص لهذا السؤال يحتاج تدقيقًا سياقيًا.','Note: Python lists and array.array differ; the source key needs contextual review.'):'';
         const qHead=state.lang==='ar'?q.ar:q.en;
         const qSub=state.lang==='ar'?q.en:q.ar;
-        target.innerHTML=`<button class="back" type="button" data-cback="1">‹ ${cText('العودة إلى المنهج','Back to course')}</button><div class="eyebrow">${esc(cLoc(set.name))}</div><h1 style="margin:10px 0">${cText('اختبار المراجعة','Review Quiz')}</h1><div class="quiz-top"><span>${cText('السؤال','Question')} ${courseIndex+1} / ${set.q.length}</span><span>✦ ${courseScore}</span></div><div class="progress-track"><div class="progress-fill" style="width:${100*courseIndex/set.q.length}%"></div></div>
+        target.innerHTML=`<button class="back" type="button" data-cback="1">‹ ${cText('العودة إلى المنهج','Back to course')}</button><div class="eyebrow">${esc(cLoc(set.name))}</div><h1 style="margin:10px 0">${cText('اختبار المراجعة','Review Quiz')}</h1><div class="quiz-top"><span>${cText('السؤال','Question')} ${courseIndex+1} / ${total}</span><span>✦ ${courseScore}</span></div><div class="progress-track"><div class="progress-fill" style="width:${100*courseIndex/total}%"></div></div>
           <div class="card"><div class="card-label">${kind==='tf' ? cText('صح أم خطأ؟','True or False?') : cText('اختر الإجابة الصحيحة','Choose the correct answer')}</div><h2 style="line-height:1.7;margin:0 0 13px;font-size:19px" dir="auto">${esc(qHead)}</h2><p class="muted" style="margin:0" dir="auto">${esc(qSub)}</p></div>
           <div>${choices.map((choice,i)=>`<button type="button" class="quiz-choice ${coursePicked===i?'selected':''} ${courseAnswered&&i===correct?'correct':''} ${courseAnswered&&i===coursePicked&&i!==correct?'wrong':''}" data-cpick="${i}" ${courseAnswered?'disabled':''}><b>${kind==='tf'?(i===0?'✓':'×'):'ABCD'[i]}</b><span dir="auto">${esc(choice)}</span></button>`).join('')}</div>
           ${courseAnswered?`<div class="feedback"><strong>${coursePicked===correct?'✅ '+cText('إجابة صحيحة','Correct'):'💡 '+cText('الإجابة الصحيحة','Correct answer')+': '+esc(choices[correct])}</strong><div>${esc(cLoc(q.why || [ 'الإجابة بحسب التجميعة المرفقة.', 'Answer key from the uploaded compilation.' ]))}</div>${sideNote?`<div style="color:#ffd469;margin-top:8px">⚠ ${esc(sideNote)}</div>`:''}</div>`:''}
-          ${selectedSet==='activity2'?`<div class="course-note">${cText('أسئلة هذا النشاط تفترض الاطلاع على كود نظام المستشفى؛ لا تتعامل مع مفتاح التجميعة على أنه برهان مستقل.','These questions presuppose hospital source code, which was not provided.')}</div>`:''}
+          ${entry.source==='activity2'?`<div class="course-note">${cText('أسئلة هذا النشاط تفترض الاطلاع على كود نظام المستشفى؛ لا تتعامل مع مفتاح التجميعة على أنه برهان مستقل.','These questions presuppose hospital source code, which was not provided.')}</div>`:''}
           <button class="primary full" type="button" data-cnext="1" style="margin-top:15px">${courseAnswered?(courseIndex===set.q.length-1?cText('عرض النتيجة','See Results'):cText('السؤال التالي','Next Question')):cText('تحقق من الإجابة','Check Answer')}</button>`;
       }
     }
@@ -433,10 +483,10 @@
       if(button.dataset.cback){courseMode='overview';renderItbs();scrollCourse();return;}
       if(button.dataset.cunit){courseMode='unit';selectedUnit=button.dataset.cunit;renderItbs();scrollCourse();return;}
       if(button.dataset.crun!==undefined){let unit=syllabus.units.find(u=>u.id===selectedUnit);let topic=unit?.topics[Number(button.dataset.crun)];if(topic){state.editor=topic.code;state.stdin='';persist();setScreen('lab');}return;}
-      if(button.dataset.cquiz){selectedSet=button.dataset.cquiz;courseMode='quiz';courseIndex=0;courseScore=0;coursePicked=null;courseAnswered=false;renderItbs();scrollCourse();return;}
-      if(button.dataset.cretry){courseIndex=0;courseScore=0;coursePicked=null;courseAnswered=false;renderItbs();scrollCourse();return;}
+      if(button.dataset.cquiz){startCourseRound(button.dataset.cquiz);renderItbs();scrollCourse();return;}
+      if(button.dataset.cretry){startCourseRound(selectedSet);renderItbs();scrollCourse();return;}
       if(button.dataset.cpick!==undefined){if(courseAnswered)return;coursePicked=Number(button.dataset.cpick);renderItbs();return;}
-      if(button.dataset.cnext){if(!courseAnswered){if(coursePicked===null){alert(cText('اختر إجابة أولًا','Please choose an answer.'));return;}let q=syllabus.sets[selectedSet].q[courseIndex];let answer=syllabus.sets[selectedSet].kind==='tf'?(q.answer?0:1):q.answer;if(coursePicked===answer)courseScore++;courseAnswered=true;}else{courseIndex++;coursePicked=null;courseAnswered=false;}renderItbs();if(courseIndex<syllabus.sets[selectedSet].q.length)scrollCourse();return;}
+      if(button.dataset.cnext){if(!courseAnswered){if(coursePicked===null){alert(cText('اختر إجابة أولًا','Please choose an answer.'));return;}if(coursePicked===courseRound[courseIndex].correct)courseScore++;courseAnswered=true;}else{courseIndex++;coursePicked=null;courseAnswered=false;}renderItbs();if(courseIndex<courseRound.length)scrollCourse();return;}
     };
   }
 
